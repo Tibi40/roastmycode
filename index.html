@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RoastMyCode — Codul tău, distrus cu umor brutal</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a; --bg2:#111; --bg3:#1a1a1a;
+  --fire:#ff4500; --fire2:#ff6a00; --ember:#ffa500;
+  --text:#f0f0f0; --text2:#a0a0a0; --border:#2a2a2a;
+  --green:#00ff88; --blue:#4488ff; --radius:12px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+header{text-align:center;padding:3rem 1rem 2rem}
+.logo-wrap{display:inline-flex;align-items:center;gap:16px;margin-bottom:12px}
+.fire-icon{font-size:3rem;animation:flicker 2s ease-in-out infinite}
+@keyframes flicker{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.1) rotate(2deg)}}
+h1{font-family:'Bebas Neue',cursive;font-size:clamp(3rem,8vw,5.5rem);letter-spacing:2px;background:linear-gradient(135deg,var(--fire),var(--ember),#fff8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.tagline{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--text2);letter-spacing:1px}
+.tagline span{color:var(--fire);font-weight:700}
+.counter-badge{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:50px;padding:6px 16px;font-size:.8rem;color:var(--text2);margin-top:16px;font-family:'JetBrains Mono',monospace}
+.dots{display:flex;gap:4px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:.3s}
+.dot.active{background:var(--fire);box-shadow:0 0 6px var(--fire)}
+.container{max-width:900px;margin:0 auto;padding:0 1rem 4rem}
+.input-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.card-header{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.terminal-dots{display:flex;gap:6px}
+.td{width:12px;height:12px;border-radius:50%}
+.td.r{background:#ff5f57}.td.y{background:#ffbd2e}.td.g{background:#28c840}
+.card-title{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text2);margin-left:8px}
+textarea{width:100%;min-height:280px;background:transparent;border:none;outline:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.85rem;line-height:1.7;padding:20px;resize:vertical}
+textarea::placeholder{color:#3a3a3a;font-style:italic}
+.input-footer{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border);background:var(--bg3)}
+.char-count{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--text2)}
+.lang-select{background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:6px 10px;cursor:pointer;outline:none}
+.btn-roast{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--fire),var(--fire2));color:#fff;border:none;border-radius:10px;padding:12px 28px;font-family:'Bebas Neue',cursive;font-size:1.3rem;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.btn-roast:hover{transform:scale(1.03);box-shadow:0 0 20px rgba(255,69,0,.4)}
+.btn-roast:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;display:none}
+.btn-roast.loading .spinner{display:block}
+.btn-roast.loading .btn-text{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mode-tabs{display:flex;gap:8px;margin-bottom:20px}
+.tab-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s}
+.tab-btn:hover{border-color:#444;color:var(--text)}
+.tab-btn.active-roast{background:#ff45001a;border-color:var(--fire);color:var(--fire)}
+.tab-btn.active-fix{background:#4488ff1a;border-color:var(--blue);color:var(--blue)}
+.output-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;animation:slideUp .4s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.output-card.roast-mode{border-color:#ff450033}
+.output-card.fix-mode{border-color:#4488ff33}
+.output-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.output-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.roast-mode .output-icon{background:#ff45002a}
+.fix-mode .output-icon{background:#4488ff2a}
+.output-title{font-weight:700;font-size:1.1rem}
+.output-sub{font-size:.78rem;color:var(--text2)}
+.output-body{padding:24px;font-size:.95rem;line-height:1.8;white-space:pre-wrap}
+.roast-mode .output-body{font-family:'Inter',sans-serif;color:#ffd8cc;border-left:3px solid var(--fire);padding-left:20px;margin-left:4px}
+.fix-mode .output-body{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:#c8d8ff}
+.score-section{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:0 20px 20px}
+.score-item{background:var(--bg3);border-radius:10px;padding:12px;text-align:center}
+.score-label{font-size:.72rem;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.score-val{font-family:'Bebas Neue',cursive;font-size:1.8rem;color:var(--fire)}
+.score-bar{width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.score-fill{height:100%;background:linear-gradient(90deg,var(--fire),var(--ember));border-radius:2px;transition:width 1s ease}
+.paywall{background:var(--bg2);border:1px solid #ff450044;border-radius:var(--radius);padding:40px 32px;text-align:center;animation:slideUp .4s ease}
+.paywall h2{font-family:'Bebas Neue',cursive;font-size:2.5rem;color:var(--fire);margin-bottom:8px}
+.paywall p{color:var(--text2);margin-bottom:24px;font-size:.95rem;line-height:1.7}
+.paywall-price{font-family:'Bebas Neue',cursive;font-size:4rem;color:var(--ember);line-height:1;margin-bottom:4px}
+.paywall-period{color:var(--text2);font-size:.85rem;margin-bottom:28px}
+.btn-upgrade{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--fire),var(--fire2));color:#fff;border:none;border-radius:10px;padding:14px 36px;font-family:'Bebas Neue',cursive;font-size:1.4rem;letter-spacing:1px;cursor:pointer;transition:all .2s;margin-bottom:16px}
+.btn-upgrade:hover{box-shadow:0 0 24px rgba(255,69,0,.5);transform:scale(1.04)}
+.paywall-note{font-size:.75rem;color:#555}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:32px;max-width:500px;width:100%}
+.modal h3{font-family:'Bebas Neue',cursive;font-size:1.8rem;margin-bottom:16px;color:var(--ember)}
+.share-preview{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text2);margin-bottom:20px;max-height:150px;overflow-y:auto;line-height:1.6;white-space:pre-wrap}
+.share-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-copy,.btn-tweet{flex:1;padding:12px;border-radius:10px;font-weight:600;font-size:.9rem;cursor:pointer;border:1px solid;transition:.2s}
+.btn-copy{background:var(--bg3);border-color:var(--border);color:var(--text)}
+.btn-copy:hover{border-color:#555;background:#222}
+.btn-tweet{background:#1d9bf0;border-color:#1d9bf0;color:#fff}
+.btn-tweet:hover{background:#1a8cd8}
+.btn-close-modal{background:none;border:none;color:var(--text2);float:right;cursor:pointer;font-size:1.2rem;margin-top:-8px}
+.examples{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.example-btn{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:.73rem;color:var(--text2);cursor:pointer;transition:.2s}
+.example-btn:hover{border-color:var(--fire);color:var(--fire)}
+footer{text-align:center;padding:3rem 1rem;font-size:.8rem;color:#333;border-top:1px solid var(--border);margin-top:4rem}
+footer a{color:#555;text-decoration:none}
+footer a:hover{color:var(--fire)}
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:12px 20px;font-size:.85rem;color:var(--text);transform:translateY(80px);opacity:0;transition:.3s;z-index:200}
+.toast.show{transform:translateY(0);opacity:1}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <div class="fire-icon">🔥</div>
+    <h1>RoastMyCode</h1>
+  </div>
+  <p class="tagline">Codul tău, <span>distrus cu umor brutal</span>. Fix-uri reale incluse.</p>
+  <div class="counter-badge">
+    <span>Roast-uri gratuite:</span>
+    <div class="dots">
+      <div class="dot active" id="d1"></div>
+      <div class="dot active" id="d2"></div>
+      <div class="dot active" id="d3"></div>
+    </div>
+    <span id="counter-text">3 rămase</span>
+  </div>
+</header>
+
+<div class="container">
+  <div class="examples">
+    <span style="font-size:.75rem;color:#444;align-self:center;font-family:'JetBrains Mono',monospace">Try:</span>
+    <button class="example-btn" onclick="loadExample('nested')">Nested hell</button>
+    <button class="example-btn" onclick="loadExample('varnames')">Bad var names</button>
+    <button class="example-btn" onclick="loadExample('god')">God function</button>
+    <button class="example-btn" onclick="loadExample('magic')">Magic numbers</button>
+  </div>
+
+  <div class="input-card">
+    <div class="card-header">
+      <div class="terminal-dots"><div class="td r"></div><div class="td y"></div><div class="td g"></div></div>
+      <span class="card-title">// paste_your_disaster_here.js</span>
+    </div>
+    <textarea id="code-input" placeholder="// Paste your masterpiece here... or should I say disaster? 😏&#10;function doEverything() {&#10;  // TODO: refactor this mess&#10;  var x = 42;&#10;  return x;&#10;}"></textarea>
+    <div class="input-footer">
+      <span class="char-count" id="char-count">0 caractere</span>
+      <select class="lang-select" id="lang-select">
+        <option>JavaScript</option><option>TypeScript</option><option>Python</option>
+        <option>Java</option><option>C++</option><option>PHP</option>
+        <option>C#</option><option>Go</option><option>SQL</option><option>Alt limbaj</option>
+      </select>
+      <button class="btn-roast" id="roast-btn" onclick="handleRoast()">
+        <div class="spinner"></div>
+        <span class="btn-text">🔥 ROAST IT!</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="output-area" class="hidden">
+    <div class="mode-tabs">
+      <button class="tab-btn active-roast" id="tab-roast" onclick="setMode('roast')">🔥 Roast Mode</button>
+      <button class="tab-btn" id="tab-fix" onclick="setMode('fix')">🔧 Fix Mode</button>
+      <button class="tab-btn" onclick="openShare()" style="margin-left:auto">↗ Share</button>
+    </div>
+    <div class="score-section">
+      <div class="score-item"><div class="score-label">Readability</div><div class="score-val" id="s-read">—</div><div class="score-bar"><div class="score-fill" id="sf-read" style="width:0%"></div></div></div>
+      <div class="score-item"><div class="score-label">Maintainability</div><div class="score-val" id="s-maint">—</div><div class="score-bar"><div class="score-fill" id="sf-maint" style="width:0%"></div></div></div>
+      <div class="score-item"><div class="score-label">Disaster Level</div><div class="score-val" id="s-disaster">—</div><div class="score-bar"><div class="score-fill" id="sf-disaster" style="width:0%;background:linear-gradient(90deg,#ff4500,#ff0000)"></div></div></div>
+      <div class="score-item"><div class="score-label">WTF/minute</div><div class="score-val" id="s-wtf">—</div><div class="score-bar"><div class="score-fill" id="sf-wtf" style="width:0%;background:linear-gradient(90deg,#ffa500,#ff4500)"></div></div></div>
+    </div>
+    <div class="output-card roast-mode" id="output-card">
+      <div class="output-header">
+        <div class="output-icon" id="output-icon">🔥</div>
+        <div><div class="output-title" id="output-title">The Roast</div><div class="output-sub" id="output-sub">Gordon Ramsay mode activated...</div></div>
+      </div>
+      <div class="output-body" id="output-body"></div>
+    </div>
+  </div>
+
+  <div id="paywall" class="paywall hidden">
+    <div style="font-size:3rem;margin-bottom:12px">🔒</div>
+    <h2>Ai epuizat roast-urile gratuite!</h2>
+    <p>Ai primit 3 roast-uri gratis. Developerii serioși<br>investesc în tool-uri care îi fac mai buni.</p>
+    <div class="paywall-price">$5</div>
+    <div class="paywall-period">/ lună · Roast-uri nelimitate · Fix-uri reale</div>
+    <!-- INLOCUIESTE LINKUL DE MAI JOS cu linkul tau real de la Stripe -->
+    <button class="btn-upgrade" onclick="window.open('STRIPE_PAYMENT_LINK_AICI','_blank')">🚀 Upgrade acum</button>
+    <br><span class="paywall-note">Cancel oricând · Stripe · Securizat</span>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="share-modal">
+  <div class="modal">
+    <button class="btn-close-modal" onclick="closeShare()">✕</button>
+    <h3>📢 Share pe Reddit / Twitter</h3>
+    <div class="share-preview" id="share-preview"></div>
+    <div class="share-actions">
+      <button class="btn-copy" onclick="copyShare()">📋 Copy</button>
+      <button class="btn-tweet" onclick="tweetShare()">𝕏 Tweet</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <p>Made with 🔥 pentru developeri care știu să râdă de ei înșiși &nbsp;·&nbsp; <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Terms</a></p>
+  <p style="margin-top:8px;color:#222">Powered by Claude AI · Anthropic</p>
+</footer>
+
+<script>
+const EXAMPLES = {
+  nested:`function processUser(user) {\n  if (user) {\n    if (user.age) {\n      if (user.age > 18) {\n        if (user.country) {\n          if (user.country === 'RO') {\n            if (user.premium) {\n              return doSomething(user);\n            } else { return null; }\n          }\n        }\n      }\n    }\n  }\n  return false;\n}`,
+  varnames:`function calc(a, b, c, d, e) {\n  var x = a + b;\n  var xx = x * c;\n  var xxx = xx - d;\n  var temp = xxx;\n  var temp2 = temp * e;\n  var finalResult = temp2;\n  var result = finalResult;\n  return result;\n}`,
+  god:`function doEverything(input) {\n  if (!input) return;\n  var db = new Database();\n  db.connect("localhost","admin","password123");\n  var email = new Email();\n  email.send("admin@site.com","New user: "+input.name);\n  var pdf = generatePDF(input);\n  cache[input.id] = input;\n  console.log(input); file.write(input); db.log(input);\n  var tax = input.price * 0.19;\n  return {data:input,tax:tax,pdf:pdf};\n}`,
+  magic:`function discount(price) {\n  if (price > 500) return price * 0.85;\n  else if (price > 200) return price * 0.92;\n  else if (price > 50) return price - 7.5;\n  return price - 2;\n}`
+};
+
+let roastsLeft = parseInt(localStorage.getItem('rml_roasts') ?? '3');
+let currentRoast='', currentFix='', isLoading=false;
+
+function loadExample(k){ document.getElementById('code-input').value=EXAMPLES[k]; updateCC(); }
+function updateCC(){ document.getElementById('char-count').textContent=document.getElementById('code-input').value.length+' caractere'; }
+document.getElementById('code-input').addEventListener('input',updateCC);
+
+function updateCounter(){
+  ['d1','d2','d3'].forEach((id,i)=>document.getElementById(id).classList.toggle('active',i<roastsLeft));
+  const t=document.getElementById('counter-text');
+  t.textContent=roastsLeft+' rămase';
+  if(roastsLeft<=0){t.style.color='#ff4500';}
+}
+
+async function handleRoast(){
+  const code=document.getElementById('code-input').value.trim();
+  if(!code){showToast('Paste code first! 😅');return;}
+  if(isLoading)return;
+  if(roastsLeft<=0){
+    document.getElementById('output-area').classList.add('hidden');
+    document.getElementById('paywall').classList.remove('hidden');
+    return;
+  }
+  isLoading=true;
+  const btn=document.getElementById('roast-btn');
+  btn.classList.add('loading'); btn.disabled=true;
+  const lang=document.getElementById('lang-select').value;
+
+  try{
+    // Apelam functia noastra Netlify, nu direct Anthropic
+    const res=await fetch('/.netlify/functions/roast',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({code,lang})
+    });
+    const data=await res.json();
+    currentRoast=data.roast||'Error getting roast.';
+    currentFix=data.fix||'Error getting fix.';
+    const s=data.scores||{readability:3,maintainability:2,disaster:8,wtf:9};
+    roastsLeft=Math.max(0,roastsLeft-1);
+    localStorage.setItem('rml_roasts',roastsLeft);
+    updateCounter();
+    document.getElementById('paywall').classList.add('hidden');
+    document.getElementById('output-area').classList.remove('hidden');
+    setMode('roast');
+    setTimeout(()=>{setS('read',s.readability);setS('maint',s.maintainability);setS('disaster',s.disaster);setS('wtf',s.wtf);},300);
+    if(roastsLeft===0)showToast('Ultimul roast gratuit! Upgrade pentru mai mult 🔥');
+  }catch(e){
+    console.error(e);
+    showToast('Eroare: '+e.message);
+  }
+  isLoading=false; btn.classList.remove('loading'); btn.disabled=false;
+}
+
+function setS(k,v){
+  document.getElementById('s-'+k).textContent=v+'/10';
+  document.getElementById('sf-'+k).style.width=(v/10*100)+'%';
+}
+
+function setMode(mode){
+  const card=document.getElementById('output-card');
+  const body=document.getElementById('output-body');
+  const isR=mode==='roast';
+  card.className='output-card '+(isR?'roast-mode':'fix-mode');
+  body.textContent=isR?currentRoast:currentFix;
+  document.getElementById('output-icon').textContent=isR?'🔥':'🔧';
+  document.getElementById('output-title').textContent=isR?'The Roast':'The Fix';
+  document.getElementById('output-sub').textContent=isR?"Gordon Ramsay mode activated...":"Professional guidance (you're welcome)";
+  document.getElementById('tab-roast').className='tab-btn'+(isR?' active-roast':'');
+  document.getElementById('tab-fix').className='tab-btn'+(isR?'':' active-fix');
+}
+
+function openShare(){
+  if(!currentRoast){showToast('Roast-ează codul mai întâi!');return;}
+  document.getElementById('share-preview').textContent=`🔥 RoastMyCode mi-a distrus codul:\n\n"${currentRoast.substring(0,280)}..."\n\n👉 roastmycode.app\n\n#RoastMyCode #Programming #CodeReview`;
+  document.getElementById('share-modal').classList.remove('hidden');
+}
+function closeShare(){document.getElementById('share-modal').classList.add('hidden');}
+async function copyShare(){await navigator.clipboard.writeText(document.getElementById('share-preview').textContent);showToast('Copiat! 📋');}
+function tweetShare(){window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(document.getElementById('share-preview').textContent),'_blank');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+updateCounter();
+</script>
+</body>
+</html>
