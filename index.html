@@ -97,6 +97,47 @@ footer a:hover{color:var(--fire)}
 .toast.show{transform:translateY(0);opacity:1}
 .hidden{display:none}
 </style>
+
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyCRN58koxw43s3Y-dWmPs3AWNu_MEGQgT8",
+    authDomain: "roastmycode-519bd.firebaseapp.com",
+    projectId: "roastmycode-519bd",
+    storageBucket: "roastmycode-519bd.firebasestorage.app",
+    messagingSenderId: "285932310925",
+    appId: "1:285932310925:web:d4cf50b9bfb4af6da46dc4"
+  });
+  const auth = firebase.auth();
+
+  function loginGoogle() {
+    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then(result => {
+        const user = result.user;
+        document.getElementById('user-info').style.display = 'flex';
+        document.getElementById('user-name').textContent = user.displayName;
+        document.getElementById('btn-login').style.display = 'none';
+      })
+      .catch(err => console.error(err));
+  }
+
+  function logoutUser() {
+    auth.signOut().then(() => {
+      document.getElementById('user-info').style.display = 'none';
+      document.getElementById('btn-login').style.display = 'inline-flex';
+    });
+  }
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('user-info').style.display = 'flex';
+      document.getElementById('user-name').textContent = user.displayName;
+      document.getElementById('btn-login').style.display = 'none';
+    }
+  });
+</script>
+
 </head>
 <body>
 
